@@ -48,7 +48,7 @@ python main.py
 - **babel**: Se utiliza para formatear números.
 - **ttkthemes**: Proporciona temas adicionales para la aplicación tkinter.
 
-## Contribuir
+## Contribuciones
 
 Si deseas contribuir a este proyecto, por favor, sigue estos pasos:
 
