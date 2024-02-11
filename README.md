@@ -32,7 +32,7 @@ pip install -r requirements.txt
 Una vez que hayas clonado el repositorio y instalado las dependencias, puedes ejecutar la aplicación con el siguiente comando:
 
 ```bash
-python gestion_dinero.py
+python main.py
 ```
 
 ## Créditos
