@@ -1,8 +1,3 @@
-#Hecho por San1190 en 11 de febrero de 2024
-#Gestión de dinero con Python y SQLite
-
-
-
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
@@ -25,21 +20,19 @@ class GestionDineroApp:
 
         # Variables para almacenar la entrada del usuario
         self.descripcion_var = tk.StringVar()
-        self.monto_var = tk.DoubleVar()
+        self.dinero_var = tk.DoubleVar()
         self.fecha_var = tk.StringVar()
         self.tipo_var = tk.StringVar(value="Ingreso")  # Valor predeterminado: Ingreso
-
-        
 
         # Crear la base de datos y la tabla de transacciones
         self.conn = sqlite3.connect("gestion_dinero.db")
         self.cursor = self.conn.cursor()
         self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS transacciones (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,a
-                tipo TEXT,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                tipo TEXT, 
                 descripcion TEXT,
-                monto REAL,
+                dinero REAL,
                 fecha TEXT
             )
         ''')
@@ -60,7 +53,7 @@ class GestionDineroApp:
         tk.Entry(frame_izquierda, textvariable=self.descripcion_var).pack(side="top", padx=10, pady=10)
 
         tk.Label(frame_izquierda, text="Dinero:").pack(side="top", padx=10, pady=10)
-        tk.Entry(frame_izquierda, textvariable=self.monto_var).pack(side="top", padx=10, pady=10)
+        tk.Entry(frame_izquierda, textvariable=self.dinero_var).pack(side="top", padx=10, pady=10)
 
         tk.Label(frame_izquierda, text="Fecha:").pack(side="top", padx=10, pady=10)
         DateEntry(frame_izquierda, textvariable=self.fecha_var, date_pattern='yyyy-mm-dd').pack(side="top", padx=10, pady=10)
@@ -73,7 +66,7 @@ class GestionDineroApp:
         self.tree.heading("ID", text="ID")
         self.tree.heading("Tipo", text="Tipo")
         self.tree.heading("Descripción", text="Descripción")
-        self.tree.heading("Dinero", text="Dinero")  # Cambiado de "Monto" a "Dinero"
+        self.tree.heading("Dinero", text="Dinero")  
         self.tree.heading("Fecha", text="Fecha")
         self.tree.pack(side="top", fill="both", expand=True, padx=10, pady=10)
 
@@ -106,20 +99,20 @@ class GestionDineroApp:
     def agregar_transaccion(self):
         tipo = self.tipo_var.get()
         descripcion = self.descripcion_var.get()
-        monto = self.monto_var.get()
+        dinero = self.dinero_var.get()
         fecha = self.fecha_var.get()
 
-        if tipo and descripcion and monto and fecha:
+        if tipo and descripcion and dinero and fecha:
             self.cursor.execute('''
-                INSERT INTO transacciones (tipo, descripcion, monto, fecha)
+                INSERT INTO transacciones (tipo, descripcion, dinero, fecha)
                 VALUES (?, ?, ?, ?)
-            ''', (tipo, descripcion, monto, fecha))
+            ''', (tipo, descripcion, dinero, fecha))
             self.conn.commit()
 
             # Limpiar las entradas después de agregar una transacción
             self.tipo_var.set("Ingreso")
             self.descripcion_var.set("")
-            self.monto_var.set("")
+            self.dinero_var.set("")
             self.fecha_var.set("")
 
             # Actualizar la lista de transacciones y el balance
@@ -153,7 +146,7 @@ class GestionDineroApp:
 
     def actualizar_balance_total(self):
         # Calcular el balance total
-        self.cursor.execute('SELECT SUM(CASE WHEN tipo="Ingreso" THEN monto ELSE -monto END) AS balance FROM transacciones')
+        self.cursor.execute('SELECT SUM(CASE WHEN tipo="Ingreso" THEN dinero ELSE -dinero END) AS balance FROM transacciones')
         balance_total = self.cursor.fetchone()[0] or 0.0
 
         # Mostrar el balance total en la etiqueta correspondiente
@@ -172,7 +165,7 @@ class GestionDineroApp:
             numero_mes = str(numero_mes).zfill(2)  # Rellenar con ceros a la izquierda si es necesario
 
             # Calcular el balance del mes
-            self.cursor.execute('SELECT SUM(CASE WHEN tipo="Ingreso" THEN monto ELSE -monto END) AS balance_mes FROM transacciones WHERE strftime("%m", fecha) = ?', (str(numero_mes),))
+            self.cursor.execute('SELECT SUM(CASE WHEN tipo="Ingreso" THEN dinero ELSE -dinero END) AS balance_mes FROM transacciones WHERE strftime("%m", fecha) = ?', (str(numero_mes),))
             balance_mes = self.cursor.fetchone()[0] or 0.0
 
             # Mostrar el balance del mes en la etiqueta correspondiente
