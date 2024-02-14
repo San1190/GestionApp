@@ -1,6 +1,4 @@
-Aquí tienes el texto completado en formato Markdown:
 
-```markdown
 # Gestión de Dinero con Python y SQLite
 
 Este proyecto proporciona una aplicación simple para gestionar tus finanzas personales mediante Python y SQLite.
